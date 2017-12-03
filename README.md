@@ -9,7 +9,7 @@ This project has two majors goals:
 So on arduino we just read the data of touch and send to FPGA.
 
 Projects related to this:
-- Linux application: [application-finger-tunes]
+- Linux application: [app-finger-tunes]
 - Driver: [driver-finger-tunes]
 - FPGA: [fpga-finger-tunes]
 
@@ -49,6 +49,6 @@ Pull requests and stars are always welcome. For bugs and feature requests, [plea
 [Vitor Martins]: <http://cin.ufpe.br/~vmam>
 [Victor Aurélio]: <http://victoraurelio.com>
 
-[application-finger-tunes]: <http://github.com/amcjr>
-[driver-finger-tunes]: <http://github.com/nmf2>
+[app-finger-tunes]: <https://github.com/almdac/app-finger-tunes>
+[driver-finger-tunes]: <https://github.com/nmf2/driver-finger-tunes>
 [fpga-finger-tunes]: <http://victoraurelio.com>
