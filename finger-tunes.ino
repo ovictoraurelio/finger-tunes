@@ -119,73 +119,30 @@ void setup () {
 
   // Initialize the digital pin as an output.
   // Entradas
-  pinMode(input1, INPUT);
-  pinMode(input2, INPUT);  
-  pinMode(input3, INPUT);  
-  pinMode(input4, INPUT);
+  pinMode(input[0], INPUT);
+  pinMode(input[1], INPUT);  
+  pinMode(input[2], INPUT);  
+  pinMode(input[3], INPUT);
 }
 void loop () {
    
   for(i=0; i<128; i++){
     notes[i%4] += analogRead(input[i%4]);
-    delay(5);
+    delay(1.5);
   }
 
   for(i=0; i<4; i++){
     notes[i] = notes[i] / 32;
   }
-    
-  
-  Serial.println("Porta 1\t\tPorta 2\t\tPorta 3\t\tPorta 4");
-  Serial.print(notes[0]);  
-  Serial.print("\t\t");
-  Serial.print(notes[1]);
-  Serial.print("\t\t");
-  Serial.print(notes[2]);
-  Serial.print("\t\t");
-  Serial.println(notes[3]);
 
-  if(notes[0] <= TUNE_PLAY){
-    callBuzz(buzzerOut, NOTE_C5, 15000/12);
-  }  
-  
-  if(notes[1] <= TUNE_PLAY){
-    callBuzz(buzzerOut, NOTE_A3, 1500/12);
-  }
-  
-  if(notes[2] <= TUNE_PLAY){
-    callBuzz(buzzerOut, NOTE_G7, 1500/12);
-  }
-  
-  if(notes[3] <= TUNE_PLAY){
-    callBuzz(buzzerOut, NOTE_D8, 1500/12);
+  for(i=0; i<4; i++){
+    if(notes[i] <= TUNE_PLAY){
+      Serial.println(i+1);      
+    }
   }
      
   for(i=0; i<8; i++){
       notes[i] = 0;
   }
-}
-
-void callBuzz(int a, long b, long c){
-  buzz(a, b, c);
-  lock = 1; 
-}
-
-void buzz(int targetPin, long frequency, long length) {
-  digitalWrite(13, HIGH);
-  long delayValue = 1000000 / frequency / 2; // calculate the delay value between transitions
-  //// 1 second's worth of microseconds, divided by the frequency, then split in half since
-  //// there are two phases to each cycle
-  long numCycles = frequency * length / 1000; // calculate the number of cycles for proper timing
-  //// multiply frequency, which is really cycles per second, by the number of seconds to
-  //// get the total number of cycles to produce
-  for (long i = 0; i < numCycles; i++) { // for the calculated length of time...
-    digitalWrite(targetPin, HIGH); // write the buzzer pin high to push out the diaphram
-    delayMicroseconds(delayValue); // wait for the calculated delay value
-    digitalWrite(targetPin, LOW); // write the buzzer pin low to pull back the diaphram
-    delayMicroseconds(delayValue); // wait again or the calculated delay value
-  }
-  digitalWrite(13, LOW);
- 
 }
 
