@@ -126,13 +126,13 @@ void setup () {
 }
 void loop () {
    
-  for(i=0; i<128; i++){
+  for(i=0; i<32; i++){
     notes[i%4] += analogRead(input[i%4]);
     delay(1.5);
   }
 
   for(i=0; i<4; i++){
-    notes[i] = notes[i] / 32;
+    notes[i] = notes[i] / 8;
   }
 
   for(i=0; i<4; i++){
