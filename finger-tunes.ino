@@ -97,16 +97,19 @@
 #define NOTE_DS8 4978
 
 
-#define TUNE_PLAY 90
+#define TUNE_PLAY 0
 #define buzzerOut 3
 
 int lock, i;
-int notes[8];
 int input[8];
+int sample[8];
+int note[8];
 
 void setup () {
   Serial.begin(9600); 
   lock = 0;
+
+  
   
   // Buzzer
   pinMode (buzzerOut, OUTPUT);
@@ -125,24 +128,73 @@ void setup () {
   pinMode(input[3], INPUT);
 }
 void loop () {
-   
+
+  sample[0] = sample[1] = sample[2] = sample[3] = 0;
+  
   for(i=0; i<32; i++){
-    notes[i%4] += analogRead(input[i%4]);
+    sample[i%4] += analogRead(input[i%4]);
     delay(1.5);
   }
 
   for(i=0; i<4; i++){
-    notes[i] = notes[i] / 8;
+    note[i] = sample[i] / 8;
   }
 
   for(i=0; i<4; i++){
-    if(notes[i] <= TUNE_PLAY){
-      Serial.println(i+1);      
-    }
+    playNote(i);
   }
-     
-  for(i=0; i<8; i++){
-      notes[i] = 0;
+
+  Serial.println("Note 1:\t\tNote 2:\t\tNote 3:\t\tNote 4:");
+  Serial.print(note[0]);
+  Serial.print("\t\t");
+  Serial.print(note[1]);
+  Serial.print("\t\t");
+  Serial.print(note[2]);
+  Serial.print("\t\t");
+  Serial.println(note[3]); 
+  
+}
+
+void playNote(int index){
+  /*if(note[index] <= TUNE_PLAY){
+    Serial.println(index+1);      
+  }*/
+  if(note[0] <= TUNE_PLAY){
+    callBuzz(buzzerOut, NOTE_C5, 900/12);
+  }  
+  
+  if(note[1] <= TUNE_PLAY){
+    callBuzz(buzzerOut, NOTE_A3, 900/12);
+  }
+  
+  if(note[2] <= TUNE_PLAY){
+    callBuzz(buzzerOut, NOTE_G7, 900/12);
+  }
+  
+  if(note[3] <= TUNE_PLAY){
+    callBuzz(buzzerOut, NOTE_D8, 900/12);
   }
 }
 
+void callBuzz(int a, long b, long c){
+  buzz(a, b, c);
+  lock = 1; 
+}
+
+void buzz(int targetPin, long frequency, long length) {
+  digitalWrite(13, HIGH);
+  long delayValue = 1000000 / frequency / 2; // calculate the delay value between transitions
+  //// 1 second's worth of microseconds, divided by the frequency, then split in half since
+  //// there are two phases to each cycle
+  long numCycles = frequency * length / 1000; // calculate the number of cycles for proper timing
+  //// multiply frequency, which is really cycles per second, by the number of seconds to
+  //// get the total number of cycles to produce
+  for (long i = 0; i < numCycles; i++) { // for the calculated length of time...
+    digitalWrite(targetPin, HIGH); // write the buzzer pin high to push out the diaphram
+    delayMicroseconds(delayValue); // wait for the calculated delay value
+    digitalWrite(targetPin, LOW); // write the buzzer pin low to pull back the diaphram
+    delayMicroseconds(delayValue); // wait again or the calculated delay value
+  }
+  digitalWrite(13, LOW);
+ 
+}
